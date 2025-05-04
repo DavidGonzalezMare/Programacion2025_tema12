@@ -385,9 +385,9 @@ Se deja como ejercicio al alumno añadir un botón en el que según el nombre la
 <https://node-comarques-rest-server-production.up.railway.app/api/comarques/infoComarca/L'alacantí>
 
 
-1. # **Api Rest The Movie DataBase**
+# <a name="_apartado7"></a>7. Api Rest The Movie DataBase
 
-## **The Movie DataBase**
+## The Movie DataBase
 Vamos a realizar un ejercicio para trabajar con otra API Rest más completa y dinámica que la que hemos utilizado en el apartado anterior.
 
 Esta API Rest es la de la página [The Movie DataBase](https://www.themoviedb.org/), en la que tenemos una completísima base de datos de películas y series.
@@ -398,31 +398,25 @@ Uno de ellos es el de las películas ahora mismo en cartelera:
 
 <https://developer.themoviedb.org/reference/movie-now-playing-list>.
 
-## **Api Key**
+## Api Key
 Para poder trabajar con esta API Rest necesitamos una **clave o API Key**, a diferencia con la API de comarcas que trabajamos en los apartados anteriores que no la necesitaban.
 
-Si en la página Get Starter pulsamos sobre el botón Get Api Key:
+Si en la página [Get Starter](https://developer.themoviedb.org/reference/intro/getting-started) pulsamos sobre el botón Get Api Key:
 
-![Interfaz de usuario gráfica
-
-El contenido generado por IA puede ser incorrecto.](Aspose.Words.3649f178-838d-451b-bdb0-b3d0de791683.014.png)
+![Get Api Key](images/image14.png)
 
 Nos pide que nos hagamos una cuenta y en ella tendremos que ir al apartado correspondiente:
 
-![Interfaz de usuario gráfica, Texto, Aplicación, Sitio web
-
-El contenido generado por IA puede ser incorrecto.](Aspose.Words.3649f178-838d-451b-bdb0-b3d0de791683.015.png)
+![Cuenta](images/image15.png)
 
 Tendremos que copiar luego nuestra API Key para poder acceder al endpoint deseado.
 
-## **Creación y organización del proyecto**
-De nuevo, como en el apartado anterior, crearemos un nuevo proyecto y en el mismo, crearemos las carpetas Models, Controllers, Views.
+## Creación y organización del proyecto
+De nuevo, como en el apartado anterior, crearemos un nuevo proyecto y en el mismo, crearemos las carpetas **Models, Controllers, Views**.
 
 Vamos a crear a continuación el formulario principal en el que vamos a visualizar nuestras películas. Tendrá un aspecto similar a este:
 
-![Interfaz de usuario gráfica, Aplicación
-
-El contenido generado por IA puede ser incorrecto.](Aspose.Words.3649f178-838d-451b-bdb0-b3d0de791683.016.png)
+![Formulario](images/image16.png)
 
 Siendo un elemento de tipo PictureBox el rectángulo que aparece en medio y que nos permitirá ver la portada de la película.
 
@@ -432,273 +426,167 @@ Vamos a crear a continuación la clase película, que al igual que hacíamos ant
 
 Para ello, en primer lugar vamos a ver la estructura JSON que nos devuelve la petición API a The Movie Database, con las películas en cartelera.
 
-Para ello, lo podemos hacer en el navegador, o bien en el programa Postman, utilizando la siguiente url, en la que debemos incorporar el idioma y la API\_Key:
+Para ello, lo podemos hacer en el navegador, o bien en el programa [Postman](https://www.postman.com/), utilizando la siguiente url, en la que debemos incorporar el idioma y la API_Key:
 
 <https://api.themoviedb.org/3/movie/now_playing?api_key=API_KEY&language=es>
 
-![Interfaz de usuario gráfica, Texto, Aplicación, Correo electrónico
-
-El contenido generado por IA puede ser incorrecto.](Aspose.Words.3649f178-838d-451b-bdb0-b3d0de791683.017.png)
+![Postman](images/image17.png)
 
 
 Vemos que el resultado JSON nos ofrece información, así como una lista de películas que es la que nos interesa (uno de sus elementos) para utilizar en [Json2CSharp](https://json2csharp.com/) para poder crear la clase **Película** en **Models**:
 
-![Interfaz de usuario gráfica, Texto, Aplicación
-
-El contenido generado por IA puede ser incorrecto.](Aspose.Words.3649f178-838d-451b-bdb0-b3d0de791683.018.png)
+![Pelicula Class](images/image18.png)
 
 Dando como resultado la clase **Models/Película**:
 
+```csharp
 public class Pelicula
-
 {
-
-`    `public bool adult { get; set; }
-
-`    `public string backdrop\_path { get; set; }
-
-`    `public List<int> genre\_ids { get; set; }
-
-`    `public int id { get; set; }
-
-`    `public string original\_language { get; set; }
-
-`    `public string original\_title { get; set; }
-
-`    `public string overview { get; set; }
-
-`    `public double popularity { get; set; }
-
-`    `public string poster\_path { get; set; }
-
-`    `public string release\_date { get; set; }
-
-`    `public string title { get; set; }
-
-`    `public bool video { get; set; }
-
-`    `public double vote\_average { get; set; }
-
-`    `public int vote\_count { get; set; }
-
+    public bool adult { get; set; }
+    public string backdrop_path { get; set; }
+    public List<int> genre_ids { get; set; }
+    public int id { get; set; }
+    public string original_language { get; set; }
+    public string original_title { get; set; }
+    public string overview { get; set; }
+    public double popularity { get; set; }
+    public string poster_path { get; set; }
+    public string release_date { get; set; }
+    public string title { get; set; }
+    public bool video { get; set; }
+    public double vote_average { get; set; }
+    public int vote_count { get; set; }
 }
+
+```
 
 **Creación del controlador**
 
-A continuación, vamos a crear Controllers/PeliculasController que nos permitirá acceder a la API y obtener una lista de películas.
+A continuación, vamos a crear **Controllers/PeliculasController** que nos permitirá acceder a la API y obtener una lista de películas.
 
-Ponemos el código a continuación, recordando que se debe instalar el paquete NewtonSoft.JSON:
+Ponemos el código a continuación, recordando que se debe instalar el paquete **NewtonSoft.JSON**:
 
-
+```csharp
 public class PeliculasController
-
 {
+    // Variable local que nos permite realizar 
+    // solicitudes HTTP
+    private HttpClient _httpClient;
 
-`    `// Variable local que nos permite realizar 
+    private string _apiKey = "1bcambiarporlanuestrabf";
 
-`    `// solicitudes HTTP
+    public PeliculasController()
+    {
+        _httpClient = new HttpClient();
+    }
 
-`    `private HttpClient \_httpClient;
+    public async Task<List<Pelicula>> GetPeliculasNowPlaying()
+    {
+        try
+        {
+            string url = $"https://api.themoviedb.org/3/movie/now_playing?api_key={_apiKey}&language=es";
 
-`    `// Esta sería nuestra API\_Key
+            HttpResponseMessage response = await _httpClient.GetAsync(url);
 
-`    `private string \_apiKey = "1b5aaaaaaaaaaaaaabf";
+            response.EnsureSuccessStatusCode();
 
-`    `public PeliculasController()
+            string responseJSON = await response.Content.ReadAsStringAsync();
 
-`    `{
+            JObject jsonObject = JObject.Parse(responseJSON);
+            JArray resultsArray = (JArray)jsonObject["results"];
+            List<Pelicula> peliculas = resultsArray.ToObject<List<Pelicula>>();
 
-`        `\_httpClient = new HttpClient();
-
-`    `}
-
-`    `// De momento vamos a hacer pruebas aquí.
-
-`    `public async Task<List<Pelicula>> GetPeliculasNowPlaying()
-
-`    `{
-
-`        `try
-
-`        `{
-
-`            `string url = $"https://api.themoviedb.org/3/movie/now\_playing?api\_key={\_apiKey}&language=es";
-
-`            `HttpResponseMessage response = await \_httpClient.GetAsync(url);
-
-`            `response.EnsureSuccessStatusCode();
-
-`            `// Llamada asíncrona a la url
-
-`            `string responseJSON = await response.Content.ReadAsStringAsync();
-
-`            `// Creamos un array de resultados JSON
-
-`            `JObject jsonObject = JObject.Parse(responseJSON);
-
-`            `JArray resultsArray = (JArray)jsonObject["results"];
-
-`            `// Deserializamos obteniendo la lista de películas
-
-`            `List<Pelicula> peliculas = resultsArray.ToObject<List<Pelicula>>();
-
-`            `return (peliculas);
-
-`        `}
-
-`        `catch (Exception)
-
-`        `{
-
-`            `return null;
-
-`        `}
-
-`    `}
-
+            return (peliculas);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
 }
+
+```
 
 
 **Programación de la Interfaz (Formulario)**
 
 Este sería el código que tendríamos en nuestro formulario. Se han puesto los distintos eventos del mismo:
 
+```csharp
 public Form1()
-
 {
-
-`    `InitializeComponent();
-
+    InitializeComponent();
 }
 
 PeliculasController peliculasController = new PeliculasController();
-
 List<Pelicula> listaPeliculas = null;
 
-int \_posicion = 0;
+int _posicion = 0;
 
 private async void obtenerPeliculasActuales()
-
 {
-
-`    `// Obtenemos la lista de pel�culas
-
-`    `listaPeliculas = await peliculasController.GetPeliculasNowPlaying();
-
-`    `// Mostramos la primera. La hacemos de manera as�ncrona
-
-`    `mostrarPelicula(\_posicion);
-
+    listaPeliculas = await peliculasController.GetPeliculasNowPlaying();
+    mostrarPelicula(_posicion);
 }
 
-// Esta funci�n se llama cuando ya se hayan 
-
-// Cargado las pel�culas y carga la de pos
-
+// Esta función se llama cuando ya se hayan 
+// Cargado las películas y carga la de pos
 private async void mostrarPelicula(int pos)
-
 {
+    lblNombrePelicula.Text = listaPeliculas[pos].title;
+    string size = "w500";
+    string imageUrl = "https://image.tmdb.org/t/p/" + size + listaPeliculas[pos].poster_path; // Reemplaza con la URL de tu imagen
 
-`    `lblNombrePelicula.Text = listaPeliculas[pos].title;
+    try
+    {
+        HttpClient httpClient = new HttpClient();
 
-`    `string size = "w500";
-
-`    `// Obtenemos la url de la imagen del poster de la peli
-
-`    `string imageUrl = "https://image.tmdb.org/t/p/" + size + listaPeliculas[pos].poster\_path; 
-
-`    `try
-
-`    `{
-
-`        `HttpClient httpClient = new HttpClient();
-
-`        `// Mostramos la imagen en el PictureBox
-
-`        `byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
-
-`        `using (var ms = new MemoryStream(imageBytes))
-
-`        `{
-
-`            `pictureBox1.Image = Image.FromStream(ms);
-
-`        `}
-
-`    `}
-
-`    `catch (Exception ex)
-
-`    `{
-
-`        `MessageBox.Show("Error al cargar la imagen: " + ex.Message);
-
-`    `}
+        byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
+        using (var ms = new System.IO.MemoryStream(imageBytes))
+        {
+            pictureBox1.Image = System.Drawing.Image.FromStream(ms);
+        }
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show("Error al cargar la imagen: " + ex.Message);
+    }
 
 }
 
-private void Form1\_Load(object sender, EventArgs e)
-
+private void Form1_Load(object sender, EventArgs e)
 {
-
-`    `obtenerPeliculasActuales();
-
+    obtenerPeliculasActuales();
 }
 
-private void btnPrimero\_Click(object sender, EventArgs e)
-
+private void btnPrimero_Click(object sender, EventArgs e)
 {
-
-`    `\_posicion = 0;
-
-`    `mostrarPelicula(\_posicion);
-
+    _posicion = 0;
+    mostrarPelicula(_posicion);
 }
 
-private void btnAnterior\_Click(object sender, EventArgs e)
-
+private void btnAnterior_Click(object sender, EventArgs e)
 {
-
-`    `if (\_posicion > 0)
-
-`    `{
-
-`        `\_posicion--;
-
-`        `mostrarPelicula(\_posicion);
-
-`    `}
-
+    if (_posicion > 0)
+    {
+        _posicion--;
+        mostrarPelicula(_posicion);
+    }
 }
 
-private void btnSiguiente\_Click(object sender, EventArgs e)
-
+private void btnSiguiente_Click(object sender, EventArgs e)
 {
-
-`    `if (\_posicion < listaPeliculas.Count - 1)
-
-`    `{
-
-`        `\_posicion++;
-
-`        `mostrarPelicula(\_posicion);
-
-`    `}
-
+    if (_posicion < listaPeliculas.Count - 1)
+    {
+        _posicion++;
+        mostrarPelicula(_posicion);
+    }
 }
 
-private void btnUltimo\_Click(object sender, EventArgs e)
-
+private void btnUltimo_Click(object sender, EventArgs e)
 {
-
-`    `\_posicion = listaPeliculas.Count - 1;
-
-`    `mostrarPelicula(\_posicion);
-
+    _posicion = listaPeliculas.Count - 1;
+    mostrarPelicula(_posicion);
 }
 
-
-
-
-*Página 1**
-
+```
