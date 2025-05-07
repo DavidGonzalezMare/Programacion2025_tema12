@@ -201,7 +201,7 @@ A continuación, creamos una lista de comarcas en el formulario (accesible desde
 ```csharp
 private async void cargarComarcas(String provincia)
 {
-    listaComarcas = await comarcasController.GetComarcas(provincia);
+    _listaComarcas = await comarcasController.GetComarcas(provincia);
     
     // Cargamos en el listBox el nombre de las comarcas
     lsbComarcas.Items.Clear();
@@ -316,9 +316,8 @@ private void cargarProvincias()
 
 private async void cargarComarcas(String provincia)
 {
-    listaComarcas = await comarcasController.GetComarcas(provincia);
-    _listaComarcas = await 
-
+    _listaComarcas = await comarcasController.GetComarcas(provincia);
+    
     // Cargamos en el listBox el nombre de las comarcas
     lsbComarcas.Items.Clear();
     foreach (Comarca comarca in _listaComarcas)
