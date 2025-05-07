@@ -15,6 +15,8 @@
 
 [*6. Formulario*](#_apartado6)
 
+[*7. The Movie DataBase*](#_apartado7)
+
 
 
 # <a name="_apartado1"></a>1. Introducción.
@@ -590,3 +592,5 @@ private void btnUltimo_Click(object sender, EventArgs e)
 }
 
 ```
+
+Se deja para el alumno la implementación del botón "Ojo" en el que podemos mostrar en un nuevo formulario los datos que nos interesen de la película actualmente seleccionada.
