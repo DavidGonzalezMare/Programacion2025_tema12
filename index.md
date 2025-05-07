@@ -71,7 +71,7 @@ Para ello, en nuestro formulario vamos a meter los siguientes controles:
 
 - Un comboBox en el que posteriormente tendremos el nombre de las tres provincias (Alacant, València y Castelló). Le llamaremos `cmbProvincias`.
 - Un listBox en el que introduciremos la lista de nombres de las comarcas pertenecientes a la provincia que elijamos. Se llamará `lsbComarcas`.
-- Además, tendremos un label y un linkLabel en el que mostraremos el nombre de la comarca y un enlace a su imagen cuando elijamos una comarca en la lista.  `lblNombreComarca` y `lnkImagenComarca`.
+- Además, tendremos un label y un linkLabel en el que mostraremos el nombre de la comarca y un enlace a su imagen cuando elijamos una comarca en la lista.  `lblNombreComarca` y `lnkImagen`.
 
 Tendrá un aspecto similar al siguiente:
 
@@ -201,7 +201,7 @@ A continuación, creamos una lista de comarcas en el formulario (accesible desde
 ```csharp
 private async void cargarComarcas(String provincia)
 {
-    _listaComarcas = await comarcasController.GetComarcas(provincia);
+    _listaComarcas = await _comarcasController.GetComarcas(provincia);
     
     // Cargamos en el listBox el nombre de las comarcas
     lsbComarcas.Items.Clear();
