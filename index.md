@@ -316,7 +316,7 @@ private void cargarProvincias()
 
 private async void cargarComarcas(String provincia)
 {
-    _listaComarcas = await comarcasController.GetComarcas(provincia);
+    _listaComarcas = await _comarcasController.GetComarcas(provincia);
     
     // Cargamos en el listBox el nombre de las comarcas
     lsbComarcas.Items.Clear();
